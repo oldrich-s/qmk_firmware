@@ -5,6 +5,31 @@ enum layer_names {
   _FN
 };
 
+bool isCtrl = false;
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    if (keycode == KC_LCTL) {
+        if (record->event.pressed) isCtrl = true;
+        else isCtrl = false;
+    } else if (isCtrl && keycode >= KC_MS_UP && keycode <= KC_MS_WH_RIGHT) {
+        SEND_STRING(SS_DOWN(X_LCTRL));
+        SEND_STRING(SS_DOWN(X_LALT));
+        if (keycode == KC_MS_UP) SEND_STRING("1");
+        else if (keycode == KC_MS_RIGHT) SEND_STRING("2");
+        else if (keycode == KC_MS_LEFT) SEND_STRING("3");
+        else if (keycode == KC_MS_DOWN) SEND_STRING("4");
+        else if (keycode == KC_MS_WH_UP) SEND_STRING("5");
+        else if (keycode == KC_MS_WH_RIGHT) SEND_STRING("6");
+        else if (keycode == KC_MS_WH_LEFT) SEND_STRING("7");
+        else if (keycode == KC_MS_WH_DOWN) SEND_STRING("8");
+        SEND_STRING(SS_UP(X_LALT));
+        SEND_STRING(SS_UP(X_LCTRL));
+        return false;
+    }
+    return true;
+};
+
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   /* Base          ,-----------------------------------------.     ,-----------------------------------------------------.
