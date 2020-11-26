@@ -10,8 +10,23 @@ enum custom_keycodes {
 
 bool isCtrl = false;
 bool isFn = false;
+bool lAltDown = false;
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    if (keycode == KC_LALT && record->event.pressed) {
+      lAltDown = true;
+      return false;
+    }
+
+    if (lAltDown) {
+      lAltDown = false;
+      if(keycode == KC_LALT) {
+        return false;
+      } else {
+        SEND_STRING(SS_DOWN(X_LALT)SS_DELAY(1));
+      }
+    }
+
     if (keycode == KC_LCTL) {
         if (record->event.pressed) isCtrl = true;
         else isCtrl = false;
@@ -72,7 +87,6 @@ KC_MS_WH_UP,    KC_MS_WH_RIGHT, KC_GRAVE, KC_1,    KC_2,    KC_3,   KC_4,   KC_5
 KC_MS_WH_LEFT,  KC_MS_WH_DOWN,  KC_TAB,   KC_Q,    KC_W,    KC_E,   KC_R,   KC_T,                 KC_Y,   KC_U,   KC_I,    KC_O,   KC_P,    KC_LBRC,  KC_RBRC,  KC_BSLS,           KC_PGUP,
 KC_MS_BTN1,     KC_MS_BTN2,     KC_CAPS,  KC_A,    KC_S,    KC_D,   KC_F,   KC_G,                 KC_H,   KC_J,   KC_K,    KC_L,   KC_SCLN, KC_QUOT,  KC_ENTER,                    KC_PGDN,
 KC_MS_UP,       KC_MS_RIGHT,    KC_LSFT,  KC_Z,    KC_X,    KC_C,   KC_V,   KC_B,                 KC_N,   KC_M,   KC_COMM, KC_DOT, KC_SLSH,                     KC_RSFT,  KC_UP,   KC_END,
-KC_MS_LEFT,     KC_MS_DOWN,     KC_LCTL,  KC_LGUI, KC_LALT, KC_SPC, KC_SPC,                       KC_SPC,         KC_RALT, FNKEY,  KC_RCTL,               KC_LEFT,  KC_DOWN, KC_RIGHT
+KC_MS_LEFT,     KC_MS_DOWN,     KC_LCTL,  KC_LGUI, KC_LALT, KC_SPC, KC_SPC, KC_SPC,               KC_RALT, FNKEY,  KC_RCTL,               KC_LEFT,  KC_DOWN, KC_RIGHT
   )
-
 };
